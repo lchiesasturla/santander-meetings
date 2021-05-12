@@ -71,7 +71,8 @@ const MeetingReducer = (state: any, action: any) => {
         case MeetingTypes.MEETING_LOADING:
             return {
                 ...state,
-                loading: true
+                loading: true,
+                meeting: null
             }
         
         default:
