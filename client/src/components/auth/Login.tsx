@@ -1,4 +1,4 @@
-import { Dispatch, FunctionComponent, SetStateAction, useEffect, useContext } from 'react'
+import { Dispatch, FunctionComponent, SetStateAction, useEffect, useContext, useState } from 'react'
 import Input from '../ui/Input';
 import { Container, Row, Col, Form } from 'react-bootstrap';
 import { Logo, Button, Link, FlexContainer } from '../../styles/styles';
@@ -22,13 +22,14 @@ const Login: FunctionComponent<LoginProps> = ({ setIsLogin }) => {
     let history = useHistory();
     const { authenticated, error, login } = useContext(AuthContext);
     const { register, handleSubmit, formState: { errors } } = useForm<LoginForm>();
+    const [ showError, setShowError ] = useState(false);
 
     useEffect(() => {
         if (authenticated) {
             history.push('/home');
         }
-
-    }, [authenticated, history])
+        setShowError(error ? true : false);
+    }, [authenticated, history, error])
 
     const loginSubmit = (data: IUser) => {
         login(data);
@@ -52,7 +53,20 @@ const Login: FunctionComponent<LoginProps> = ({ setIsLogin }) => {
                                 El usuario o la contraseña son incorrectos
                             </p>
                         </FlexContainer>
-                        : null
+                        : showError && error?.msg_es !== ''?
+                            <FlexContainer
+                                align='center'
+                                justify='center'
+                                shadow='0px 2px 10px 2px #c4c4c4'
+                                bdradius='10px'
+                                height={{ xxl: '40px' }}
+                                className="mb-3"
+                            >
+                                <p className="m-0 text-danger">
+                                    {error?.msg_es}
+                                </p>
+                            </FlexContainer>
+                            : null
                     }
 
                     <Col xl={12} className="mb-3">

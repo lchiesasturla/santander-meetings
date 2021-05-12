@@ -16,7 +16,8 @@ const AuthReducer = (state: any, action: any) => {
                 ...state,
                 user: action.payload,
                 authenticated: true,
-                loading: false
+                loading: false,
+                error: null
             }
         case AuthTypes.USER_NOT_CREATED:
         case AuthTypes.LOGIN_FAILED:
@@ -35,7 +36,8 @@ const AuthReducer = (state: any, action: any) => {
                 authenticated: false,
                 token: '',
                 user: null,
-                loading: true
+                loading: true,
+                error: null
             }
 
         default:

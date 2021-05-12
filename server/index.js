@@ -12,7 +12,7 @@ connection.connect(function(err) {
       console.error('Error connecting: ' + err.stack);
       return;
     }
-    connection.query("CREATE TABLE IF NOT EXISTS users (id INT AUTO_INCREMENT PRIMARY KEY, username VARCHAR(45) NOT NULL, email VARCHAR(100) NOT NULL, password VARCHAR(45) NOT NULL)", function (err, result) {
+    connection.query("CREATE TABLE IF NOT EXISTS users (id INT AUTO_INCREMENT PRIMARY KEY, username VARCHAR(45) NOT NULL, email VARCHAR(100) NOT NULL, password VARCHAR(100) NOT NULL)", function (err, result) {
       if (err) throw err;
       console.log("If not exists, table of users created");
       connection.query("CREATE TABLE IF NOT EXISTS meetings (id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(45) NOT NULL, description VARCHAR(100) NOT NULL, date VARCHAR(10) NOT NULL, beginTime VARCHAR(5) NOT NULL, endTime VARCHAR(5) NOT NULL, host INT NOT NULL)", function (err, result) {

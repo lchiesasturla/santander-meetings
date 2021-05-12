@@ -1,7 +1,7 @@
 import { Dispatch, FunctionComponent, SetStateAction, useContext, useEffect } from 'react'
 import Input from '../ui/Input';
 import { Container, Row, Col, Form } from 'react-bootstrap';
-import { Logo, Button, Link } from '../../styles/styles';
+import { Logo, Button, Link, FlexContainer } from '../../styles/styles';
 import LogoImg from '../../assets/logo.png'
 import { useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
@@ -50,6 +50,20 @@ const NewAccount: FunctionComponent<NewAccountProps> = ({setIsLogin}) => {
             <Row className="justify-content-center">
                 <Logo big={true} src={LogoImg} className="mb-3"/>
                 <Form onSubmit={handleSubmit(registerSubmit)}>
+                    {error?.msg_es !== ''?
+                            <FlexContainer
+                                align='center'
+                                justify='center'
+                                shadow='0px 2px 10px 2px #c4c4c4'
+                                bdradius='10px'
+                                height={{ xxl: '40px' }}
+                                className="mb-3"
+                            >
+                                <p className="m-0 text-danger">
+                                    {error?.msg_es}
+                                </p>
+                            </FlexContainer>
+                            : null}
                     <Col xl={12} className="mb-3">
                         <Input<NewAccountForm>
                             name='username'

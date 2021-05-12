@@ -76,7 +76,6 @@ const MeetingState = (props: any) => {
         try {
             if(meetingId){
                 const response = await axiosClient.delete(`/meetings/guests/${meetingId}/${user.id}`);
-                console.log(response);
             }
             dispatch({
                 type: MeetingTypes.GUEST_REMOVED,
