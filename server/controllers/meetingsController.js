@@ -3,6 +3,7 @@ const {
     validationResult
 } = require('express-validator');
 const utils = require('../utils/utils');
+const emailController = require('./mailController');
 
 exports.createMeeting = async (req, res) => {
     const errors = validationResult(req);
@@ -25,7 +26,9 @@ exports.createMeeting = async (req, res) => {
 
         connection.query('INSERT INTO meetings (name, description, date, beginTime, endTime, host) VALUES (?, ?, ?, ?, ?, ?)', [name, description, date, beginTime, endTime, req.user.id], function (err, result) {
             if (err) throw err;
-            guests.push({id: req.user.id});
+            guests.push({
+                id: req.user.id
+            });
             const guestsQuery = utils.buildGuestsQuery(guests, result.insertId);
             connection.query(guestsQuery, function (err, results) {
                 res.status(200).json({
@@ -38,7 +41,6 @@ exports.createMeeting = async (req, res) => {
                     host: req.user.id
                 });
             });
-
         });
     } catch (error) {
         console.log(error);
@@ -99,7 +101,7 @@ exports.getMeeting = async (req, res) => {
 exports.updateInvitation = async (req, res) => {
     try {
         const meetingId = req.params.id;
-        if(req.body.accepted === 1){
+        if (req.body.accepted === 1) {
             connection.query("UPDATE guests SET accepted = ? WHERE idMeeting = ? AND idUser = ?", [req.body.accepted, meetingId, req.user.id], function (err) {
                 if (err) throw err;
                 res.status(200).json({
@@ -107,7 +109,7 @@ exports.updateInvitation = async (req, res) => {
                     msg_en: 'Invitation accepted successfully!'
                 });
             });
-        }else{
+        } else {
             connection.query("DELETE FROM guests WHERE idMeeting = ? AND idUser = ?", [meetingId, req.user.id], function (err) {
                 if (err) throw err;
                 res.status(200).json({
@@ -132,20 +134,20 @@ exports.addGuest = async (req, res) => {
         const userId = req.params.userId;
         connection.query("SELECT * FROM guests WHERE idMeeting = ? AND idUser = ?", [meetingId, userId], function (err, result) {
             if (err) throw err;
-            console.log(result);
 
-            if (result.length < 1){
+            if (result.length < 1) {
                 connection.query("INSERT INTO guests (idMeeting, idUser) VALUES (?, ?)", [meetingId, userId], function (err) {
                     if (err) throw err;
-                    connection.query("SELECT username FROM users WHERE id = ?", [userId], function (err, result) {
+                    connection.query("SELECT username, email FROM users WHERE id = ?", [userId], function (err, result) {
                         if (err) throw err;
+                        emailController.sendInvitationEmail(result[0].username, result[0].email, meetingId);
                         res.status(200).json({
                             msg_es: `El usuario ${result[0].username} fue añadido a la meeting.`,
                             msg_en: `User ${result[0].username} added to meeting.`
                         });
                     });
                 });
-            }else{
+            } else {
                 res.status(400).json({
                     msg_es: `El Usuario ${userId} ya esta invitado a la meeting.`,
                     msg_en: `User ${userId} is already invited to meeting.`
@@ -167,17 +169,20 @@ exports.deleteGuest = async (req, res) => {
         const userId = req.params.userId;
         connection.query("SELECT * FROM guests WHERE idMeeting = ? AND idUser = ?", [meetingId, userId], function (err, result) {
             if (err) throw err;
-            if (result.length === 1){
+            if (result.length === 1) {
                 connection.query("DELETE FROM guests WHERE idMeeting = ? AND idUser = ?", [meetingId, userId], function (err) {
                     if (err) throw err;
-                    connection.query("SELECT username FROM users WHERE id = ?", [userId], function (err) {
-                        res.status(200).json({
-                            msg_es: `El Usuario ${result[0].username} fue eliminado de la meeting.`,
-                            msg_en: `User ${result[0].username} deleted from meeting.`
+                    connection.query("SELECT username, email FROM users WHERE id = ?", [userId], function (err, user) {
+                        connection.query("SELECT name FROM meetings WHERE id = ?", [meetingId], function (err, meeting) {
+                            emailController.sendCancelledEmail(user[0].username, user[0].email, meeting[0].name);
+                            res.status(200).json({
+                                msg_es: `El Usuario ${user[0].username} fue eliminado de la meeting.`,
+                                msg_en: `User ${user[0].username} deleted from meeting.`
+                            });
                         });
                     });
                 });
-            }else{
+            } else {
                 res.status(400).json({
                     msg_es: `El Usuario ${userId} no esta invitado a la meeting.`,
                     msg_en: `User ${userId} isn't invited to meeting.`
