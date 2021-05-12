@@ -9,17 +9,18 @@ exports.login = async (req, res) => {
         connection.query("SELECT * FROM users WHERE username = ?", [username], async function (err, result, fields) {
             if (err) throw err;
             let user = result[0];
-            console.log('User: ', user);
             if (!user) {
                 return res.status(400).json({
-                    msg: 'User does not exist'
+                    msg_es: 'El usuario o la contraseña son incorrectos.',
+                    msg_en: 'Username or password are incorrect.'
                 });
             }
 
             const validPass = await bcryptjs.compare(password, user.password);
             if (!validPass) {
                 return res.status(400).json({
-                    msg: 'Username or password are incorrect'
+                    msg_es: 'El usuario o la contraseña son incorrectos.',
+                    msg_en: 'Username or password are incorrect.'
                 });
             }
 
@@ -40,7 +41,10 @@ exports.login = async (req, res) => {
         });
     } catch (error) {
         console.log(error)
-        res.status(500).json({msg: 'There was an error'});
+        res.status(500).json({
+            msg_es: 'Hubo un error en el servidor.',
+            msg_en: 'There was an error in the server.'
+        });
     }
 
 }
@@ -56,6 +60,9 @@ exports.getAuthenticatedUser = async (req, res) => {
         });
     } catch (error) {
         console.log(error);
-        res.status(500).json({msg: 'There was an error'});
+        res.status(500).json({
+            msg_es: 'Hubo un error en el servidor.',
+            msg_en: 'There was an error in the server.'
+        });
     }
 }

@@ -2,9 +2,11 @@ const jwt = require('jsonwebtoken');
 
 module.exports = function(req, res, next) {
     const token = req.header('x-auth-token');
-
     if(!token){
-        return res.status(401).json({msg: 'User must be authenticated for this functionality.'})
+        return res.status(401).json({
+            msg_es: 'El usuario debe estar autenticado para esta funcionalidad.',
+            msg_en: 'User must be authenticated for this functionality.'
+        })
     }
 
     try{
@@ -12,6 +14,10 @@ module.exports = function(req, res, next) {
         req.user = encrypted.user;
         next();
     }catch(error){
-        res.status(401).json({msg: 'User must be authenticated for this functionality.'});
+        console.log(error);
+        res.status(401).json({
+            msg_es: 'El usuario debe estar autenticado para esta funcionalidad.',
+            msg_en: 'User must be authenticated for this functionality.'
+        });
     }
 }

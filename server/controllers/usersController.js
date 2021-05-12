@@ -21,7 +21,8 @@ exports.createUser = async (req, res) => {
             const user = result[0];
             if (user) {
                 return res.status(400).json({
-                    msg: 'User already exists'
+                    msg_es: 'El usuario ingresado ya existe.',
+                    msg_en: 'User already exists.'
                 });
             }
 
@@ -48,7 +49,10 @@ exports.createUser = async (req, res) => {
         });
     } catch (error) {
         console.log(error);
-        res.status(500).json({msg: 'There was an error'});
+        res.status(500).json({
+            msg_es: 'Hubo un error en el servidor.',
+            msg_en: 'There was an error in the server.'
+        });
     }
 
 }
@@ -63,6 +67,9 @@ exports.getAllUsers = async (req, res) => {
         });
     } catch (error) {
         console.log(error);
-        res.status(500).json({msg: 'There was an error'});
+        res.status(500).json({
+            msg_es: 'Hubo un error en el servidor.',
+            msg_en: 'There was an error in the server.'
+        });
     }
 }
