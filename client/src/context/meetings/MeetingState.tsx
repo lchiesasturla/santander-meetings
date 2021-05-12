@@ -146,7 +146,6 @@ const MeetingState = (props: any) => {
             type: MeetingTypes.MEETING_LOADING
         })
     }
-
     return (
         <MeetingContext.Provider
             value={{

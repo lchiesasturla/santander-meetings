@@ -27,10 +27,9 @@ const MeetingCreatePage: FunctionComponent<MeetingCreatePageProps> = () => {
     let history = useHistory();
     const {loading, user} = useContext(AuthContext);
     const {guests, createMeeting, getAllUsers} = useContext(MeetingContext);
-    const [yesterday, setYesterday] = useState(new Date());
+    const [today, setToday] = useState(new Date());
     useEffect(() => {
         if(!loading)
-            setYesterday(new Date(yesterday.setDate(yesterday.getDate() - 1)));
             getAllUsers(user);
     }, [loading]);
 
@@ -42,11 +41,6 @@ const MeetingCreatePage: FunctionComponent<MeetingCreatePageProps> = () => {
             history.push(`/meeting/detail/${meetingId}`);
         });
         
-    }
-
-    const getYesterday = () => {
-        const today = new Date();
-        setYesterday(new Date(today.setDate(today.getDate() - 1)));
     }
 
     return (
@@ -91,7 +85,7 @@ const MeetingCreatePage: FunctionComponent<MeetingCreatePageProps> = () => {
                                         error={errors.date}
                                         errormsg='El dia de la meeting es obligatorio.'
                                         validations={{required: true}}
-                                        min={yesterday.toISOString().substr(0, 10)}
+                                        min={today.toISOString().substr(0, 10)}
                                     />
                                 </Col>
                                 <Col lg={3}>
@@ -103,8 +97,7 @@ const MeetingCreatePage: FunctionComponent<MeetingCreatePageProps> = () => {
                                         error={errors.beginTime}
                                         errormsg='La hora de inicio es obligatoria.'
                                         validations={{required: true}}
-                                        min={ yesterday.toISOString().substr(0, 10) === watch('date') ? `${yesterday.getHours()}:${yesterday.getMinutes()}` : ''}
-                                        focusFunction={getYesterday}
+                                        min={ today.toISOString().substr(0, 10) === watch('date') ? `${today.getHours()}:${today.getMinutes()}` : ''}
                                     />
                                 </Col>
                                 <Col lg={3}>

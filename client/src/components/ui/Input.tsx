@@ -13,7 +13,6 @@ export interface InputProps<T> {
     errormsg?: string;
     validations: Partial<IValidations>;
     min?: string;
-    focusFunction?: () => void;
 }
 
 const Label = styled(Form.Label)`
@@ -22,12 +21,12 @@ const Label = styled(Form.Label)`
   font-size: 0.9rem;
 `;
 
-const Input = <T extends{}>({name, label, type, state, error, errormsg, validations, min, focusFunction}: InputProps<T>) => {
+const Input = <T extends{}>({name, label, type, state, error, errormsg, validations, min}: InputProps<T>) => {
     return (
         <Form.Group controlId={label ? name : undefined}>
             {label ? <Label>{label}</Label> : null}
             <InputGroup>
-                <Control type={type} min={min} onFocus={focusFunction} {...state(name, validations)}/>
+                <Control type={type} min={min} {...state(name, validations)}/>
             </InputGroup>
             {error ? <p className="help-block text-danger mt-3">{errormsg}</p> : null}
         </Form.Group>
