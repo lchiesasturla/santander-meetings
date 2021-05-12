@@ -24,7 +24,7 @@ const NewAccount: FunctionComponent<NewAccountProps> = ({setIsLogin}) => {
     
     let history = useHistory();
     const { authenticated, error, createUser } = useContext(AuthContext);
-    const { register, handleSubmit, formState: { errors } } = useForm<NewAccountForm>();
+    const { register, handleSubmit,setError, formState: { errors } } = useForm<NewAccountForm>();
 
     useEffect(() => {
         if (authenticated) {
@@ -34,8 +34,15 @@ const NewAccount: FunctionComponent<NewAccountProps> = ({setIsLogin}) => {
     }, [authenticated, history])
 
     const registerSubmit = (data: IUser) => {
-        delete data.repassword;
-        createUser(data);
+        if(data.password === data.repassword){
+            delete data.repassword;
+            createUser(data);
+        }else{
+            setError("repassword", {
+                type: "manual",
+                message: "Las contraseñas deben coincidir"
+            });
+        }
     }
 
     return ( 

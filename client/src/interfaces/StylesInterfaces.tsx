@@ -35,7 +35,7 @@ export interface ILogoProps {
 }
 
 export interface ICardButton {
-    accept ?: boolean;
+    accept : boolean;
 }
 
 interface IResponsive {

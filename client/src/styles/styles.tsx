@@ -1,6 +1,7 @@
 import styled from '@emotion/styled';
 import { FormControl } from 'react-bootstrap';
 import { IAbsoluteContainerProps, IResponsiveContainerProps, IFlexContainerProps, ILogoProps, ICardButton } from '../interfaces/StylesInterfaces';
+import { Link as RouterLink} from 'react-router-dom';
 
 export const ResponsiveContainer = styled.div<IResponsiveContainerProps>`
     width: ${props => props.width?.xxl};
@@ -183,7 +184,7 @@ export const SelectionButton = styled.button<ICardButton>`
     }
 `;
 
-export const DetailButton = styled.a`
+export const DetailButton = styled(RouterLink)`
     border: none;
     background-color: white;
     border-radius: 25px;

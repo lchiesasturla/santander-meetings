@@ -38,7 +38,7 @@ const MeetingCard: FunctionComponent<MeetingCardProps> = ({ id, title, date, beg
                     <CardSubTitle className="mb-1">{date} / {beginHour} - {endHour}</CardSubTitle>
                     {user?.id === host ? <CardSubTitle>Creada por ti</CardSubTitle> : null}
                     <CardActions>
-                        <DetailButton href={`/meeting/detail/${id}`} className={`text-decoration-none ${user?.id === host ? 'me-0' : 'me-2'}`}>
+                        <DetailButton to={`/meeting/detail/${id}`} className={`text-decoration-none ${user?.id === host ? 'me-0' : 'me-2'}`}>
                             Ver detalle
                     </DetailButton>
                         {state ?
@@ -47,7 +47,7 @@ const MeetingCard: FunctionComponent<MeetingCardProps> = ({ id, title, date, beg
 
                             : user?.id !== host ?
                                     <Fragment>
-                                        <SelectionButton className="me-2" onClick={() => handleInvite(0)}>
+                                        <SelectionButton accept={false} className="me-2" onClick={() => handleInvite(0)}>
                                             Rechazar
                                         </SelectionButton>
                                             <SelectionButton accept={true} onClick={() => handleInvite(1)}>

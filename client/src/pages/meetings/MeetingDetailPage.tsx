@@ -19,7 +19,8 @@ interface RouteParams {
 
 const MeetingDetailPage: FunctionComponent<MeetingDetailPageProps> = () => {
     const { loading, user } = useContext(AuthContext);
-    const [beers, setBeers] = useState(0);
+    const [ beers, setBeers ] = useState(0);
+    const [ temperature, setTemperature] = useState(0);
     const { meeting, guests, isAdmin, loadingMeeting, getMeeting } = useContext(MeetingContext);
     let { id } = useParams<RouteParams>();
 
@@ -31,6 +32,7 @@ const MeetingDetailPage: FunctionComponent<MeetingDetailPageProps> = () => {
     useEffect(() => {
         if(guests){
             getWeather().then(temp => {
+                setTemperature(temp);
                 setBeers(Math.ceil((guests.length * getMultiplier(temp)/6)));
             });
         }
@@ -63,12 +65,13 @@ const MeetingDetailPage: FunctionComponent<MeetingDetailPageProps> = () => {
                                 <Fragment>
                                     <img src={BeerIcon} height='35px' className='ms-4' alt='Cervezas: ' />
                                     <span className='fs-4 ms-2 text-muted fw-bold'>{beers} Cajas</span>
+
                                 </Fragment>
                                 : null
                             }
-
+                            
                         </FlexContainer>
-
+                        <p className='fs-6 fw-bold color-primary'>Temperatura: {temperature}º</p>
                         <MeetingDescription className='mt-4'>
                             {meeting?.description}
                         </MeetingDescription>

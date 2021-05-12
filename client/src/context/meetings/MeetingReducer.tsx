@@ -39,7 +39,8 @@ const MeetingReducer = (state: any, action: any) => {
             return {
                 ...state,
                 meetings: action.payload,
-                loading: false
+                loading: false,
+                guests: []
             }
             
         case MeetingTypes.MEETING_CREATED:    

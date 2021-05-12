@@ -1,5 +1,6 @@
 import { FunctionComponent } from 'react';
 import { FlexContainer, ActionCardDescription } from '../../styles/styles';
+import { Link } from 'react-router-dom';
 export interface ActionCardProps {
     title: string;
     description: string;
@@ -8,7 +9,7 @@ export interface ActionCardProps {
  
 const ActionCard: FunctionComponent<ActionCardProps> = ({title, description, illustration}) => {
     return ( 
-        <a href='/meeting/create' className='text-decoration-none'>
+        <Link to={'/meeting/create'} className='text-decoration-none'>
             <FlexContainer
                 height= {{xxl:'300px'}}
                 shadow= '0px 2px 10px 2px #c4c4c4'
@@ -21,7 +22,7 @@ const ActionCard: FunctionComponent<ActionCardProps> = ({title, description, ill
                 </ActionCardDescription>
                 <img src={illustration} height='140px' alt=''></img>
             </FlexContainer>
-        </a>
+        </Link>
     );
 }
  

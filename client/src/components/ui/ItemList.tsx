@@ -14,6 +14,7 @@ const ItemList: FunctionComponent<ItemListProps> = ({ user, guest, showButtons }
     const [isGuest, setIsGuest] = useState<boolean>(guest);
 
     const handleInvitation = () => {
+        console.log(user);
         if (!isGuest) {
             meeting ? addGuest(user, meeting.id) : addGuest(user);
         } else {
