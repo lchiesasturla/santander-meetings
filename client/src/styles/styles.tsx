@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import { FormControl } from 'react-bootstrap';
-import { IAbsoluteContainerProps, IResponsiveContainerProps, IFlexContainerProps, ILogoProps, ICardButton } from '../interfaces/StylesInterface';
+import { IAbsoluteContainerProps, IResponsiveContainerProps, IFlexContainerProps, ILogoProps, ICardButton } from '../interfaces/StylesInterfaces';
 
 export const ResponsiveContainer = styled.div<IResponsiveContainerProps>`
     width: ${props => props.width?.xxl};
@@ -151,7 +151,7 @@ export const CardTitle = styled.h2`
     word-break: break-word;
 `;
 
-export const CardHour = styled.p`
+export const CardSubTitle = styled.p`
     color: white;
     font-weight: 500;
 `;
@@ -211,6 +211,7 @@ export const StateInvitation = styled.p`
     display: flex;
     align-items: center;
     font-size: 16px;
+    color: white;
 `;
 
 export const ActionCardDescription = styled.p`

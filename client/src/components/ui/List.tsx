@@ -1,25 +1,34 @@
-import { Fragment, FunctionComponent } from 'react';
-import { IUserMeeting } from '../../interfaces/MeetingInterface';
-import { SelectionButton, PeopleList, FlexContainer } from '../../styles/styles';
+import { Fragment, FunctionComponent, useContext } from 'react';
+import { PeopleList } from '../../styles/styles';
+import ItemList from './ItemList';
+import MeetingContext from '../../context/meetings/MeetingContext';
 
 export interface ListProps {
-    users: Array<IUserMeeting>;
+    showGuests: boolean;
+    showUsers: boolean;
+    showButtons: boolean;
 }
  
-const List: FunctionComponent<ListProps> = ({users}) => {
+const List: FunctionComponent<ListProps> = ({showGuests, showUsers, showButtons}) => {
+    const {users, guests} = useContext(MeetingContext)
     return ( 
         <Fragment>
             <PeopleList>
-                {users.map(user => (
-                <li>
-                    <FlexContainer className='p-2' align='center'>
-                        <p className="ps-3 mb-0">{user.username}</p>
-                        <SelectionButton accept={!user.invited} className='ms-auto'>
-                            {user.invited ? 'Cancelar' : 'Invitar'}
-                        </SelectionButton>
-                    </FlexContainer>
-                </li>
-                ))}
+                { showGuests ?
+                    guests?.map(guest => (
+                        <ItemList key={guest.id} user={guest} guest={true} showButtons={showButtons}/>
+                    ))
+                    :
+                    null
+                }
+                { showUsers ?
+                    users?.map(user => (
+                        <ItemList key={user.id} user={user} guest={false} showButtons={showButtons}/>
+                    ))
+                    :
+                    null
+                }
+
             </PeopleList>
         </Fragment>
 

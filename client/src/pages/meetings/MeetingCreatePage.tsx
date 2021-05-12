@@ -1,39 +1,52 @@
-import { Fragment, FunctionComponent, useState } from 'react';
+import { Fragment, FunctionComponent, useEffect, useContext, useState } from 'react';
 import { Col, Container, Row, Form } from 'react-bootstrap';
+import { useForm } from 'react-hook-form';
 import Header from '../../components/layout/Header';
 import Input from '../../components/ui/Input';
 import List from '../../components/ui/List';
-import { IUserMeeting } from '../../interfaces/MeetingInterface';
+import { IMeeting } from '../../interfaces/MeetingInterface';
 import { Button } from '../../styles/styles';
+import MeetingContext from '../../context/meetings/MeetingContext';
+import AuthContext from '../../context/auth/AuthContext';
+import { useHistory } from 'react-router-dom';
 
 export interface MeetingCreatePageProps {
 
 }
 
+type CreateMeetingForm = {
+    name: string,
+    description: string,
+    date: string,
+    beginTime: string,
+    endTime: string
+}
+
 const MeetingCreatePage: FunctionComponent<MeetingCreatePageProps> = () => {
 
-    const [users, setUsers] = useState<Array<IUserMeeting>>([
-        { id: 1, username: 'lchiesa', email: 'lucaschiesa84@gmail.com', invited: false, accepted: false },
-        { id: 2, username: 'ldeniz', email: 'lucaschiesa84@gmail.com', invited: false, accepted: false },
-        { id: 3, username: 'alanriva', email: 'lucaschiesa84@gmail.com', invited: false, accepted: false },
-        { id: 4, username: 'mcastillo', email: 'lucaschiesa84@gmail.com', invited: false, accepted: true },
-        { id: 5, username: 'dsantos', email: 'lucaschiesa84@gmail.com', invited: false, accepted: false },
-        { id: 6, username: 'mcolodrero', email: 'lucaschiesa84@gmail.com', invited: false, accepted: false },
-        { id: 7, username: 'durbano', email: 'lucaschiesa84@gmail.com', invited: false, accepted: false },
-        { id: 8, username: 'dsantos', email: 'lucaschiesa84@gmail.com', invited: false, accepted: false },
-    ])
+    let history = useHistory();
+    const {loading, user} = useContext(AuthContext);
+    const {guests, createMeeting, getAllUsers} = useContext(MeetingContext);
+    const [yesterday, setYesterday] = useState(new Date());
+    useEffect(() => {
+        if(!loading)
+            setYesterday(new Date(yesterday.setDate(yesterday.getDate() - 1)));
+            getAllUsers(user);
+    }, [loading]);
 
-    const [data, setData] = useState({
-        name: '',
-        description: '',
-        date: '',
-        beginTime: '',
-        endTime: ''
-    });
+    const { register, handleSubmit, watch, formState: { errors } } = useForm<CreateMeetingForm>();
 
-    const handleSubmit = (e: any) => {
-        e.preventDefault();
-        console.log(data);
+    const createMeetingSubmit = (data: IMeeting) => {
+        data.guests = guests;
+        createMeeting(data).then( (meetingId: number) => {
+            history.push(`/meeting/detail/${meetingId}`);
+        });
+        
+    }
+
+    const getYesterday = () => {
+        const today = new Date();
+        setYesterday(new Date(today.setDate(today.getDate() - 1)));
     }
 
     return (
@@ -43,53 +56,66 @@ const MeetingCreatePage: FunctionComponent<MeetingCreatePageProps> = () => {
                 <Row>
                     <Col lg={6}>
                         <h4 className="mb-3 mt-5">Crea tu meeting!</h4>
-                        <Form onSubmit={handleSubmit}>
+                        <Form onSubmit={handleSubmit(createMeetingSubmit)}>
                             <Row>
                                 <Col lg={12} className="mb-5">
-                                    <Input
+                                    <Input<CreateMeetingForm>
                                         name='name'
                                         label='Nombre de la meeting'
                                         type='text'
-                                        state={data}
-                                        setState={setData}
+                                        state={register}
+                                        error={errors.name}
+                                        errormsg='El nombre de la meeting es obligatorio.'
+                                        validations={{required: true}}
                                     />
                                 </Col>
                                 <Col lg={12} className="mb-5">
-                                    <Input
+                                    <Input<CreateMeetingForm>
                                         name='description'
                                         label='Descripcion de la meeting'
                                         type='text'
-                                        state={data}
-                                        setState={setData}
+                                        state={register}
+                                        error={errors.description}
+                                        errormsg='La descripcion de la meeting es obligatoria.'
+                                        validations={{required: true}}
                                     />
                                 </Col>
                             </Row>
                             <Row className="mb-5">
-                                <Col lg={4}>
-                                    <Input
+                                <Col lg={6}>
+                                    <Input<CreateMeetingForm>
                                         name='date'
                                         label='Dia de la meeting'
                                         type='date'
-                                        state={data}
-                                        setState={setData}
+                                        state={register}
+                                        error={errors.date}
+                                        errormsg='El dia de la meeting es obligatorio.'
+                                        validations={{required: true}}
+                                        min={yesterday.toISOString().substr(0, 10)}
                                     />
                                 </Col>
-                                <Col lg={4}>
-                                    <Input
+                                <Col lg={3}>
+                                    <Input<CreateMeetingForm>
                                         name='beginTime'
                                         label='Empieza a las'
                                         type='time'
-                                        state={data}
-                                        setState={setData}
+                                        state={register}
+                                        error={errors.beginTime}
+                                        errormsg='La hora de inicio es obligatoria.'
+                                        validations={{required: true}}
+                                        min={ yesterday.toISOString().substr(0, 10) === watch('date') ? `${yesterday.getHours()}:${yesterday.getMinutes()}` : ''}
+                                        focusFunction={getYesterday}
                                     />
                                 </Col>
-                                <Col lg={4}>
-                                    <Input
+                                <Col lg={3}>
+                                    <Input<CreateMeetingForm>
                                         name='endTime'
                                         label='Termina a las'
                                         type='time'
-                                        state={data}
-                                        setState={setData}
+                                        state={register}
+                                        error={errors.endTime}
+                                        errormsg='La hora de fin es obligatoria.'
+                                        validations={{required: true}}
                                     />
                                 </Col>
                             </Row>
@@ -99,7 +125,9 @@ const MeetingCreatePage: FunctionComponent<MeetingCreatePageProps> = () => {
                     <Col lg={6}>
                         <h4 className="mb-3 mt-5">Invitados</h4>
                         <List
-                            users={users}
+                            showGuests={true}
+                            showUsers={true}
+                            showButtons={true}
                         />
                     </Col>
                 </Row>

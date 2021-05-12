@@ -1,23 +1,30 @@
+import { IResponse, IUser } from "./GenericInterface";
+
 export interface IMeeting {
-    id: number;
-    title: string;
-    day: string;
-    beginHour: string;
-    endHour: string;
+    id?: number;
+    name: string;
+    description: string;
+    date: string;
+    beginTime: string;
+    endTime: string;
+    guests?: Array<IUser>;
+    host?: number;
+    accepted?: number;
 }
 
-export interface IUser {
-    id: number;
-    username: string;
-    email?: string;
-    password?: string;
-    repassword?: string;
-}
-
-export interface IUserMeeting {
-    id: number;
-    username: string;
-    email: string;
-    invited: boolean;
-    accepted: boolean;
+export interface IMeetingContextProps {
+    message?: IResponse;
+    users?: Array<IUser>;
+    guests?: Array<IUser>;
+    meetings?: IMeeting[];
+    meeting?: IMeeting;
+    isAdmin: boolean;
+    loadingMeeting?: boolean;
+    createMeeting: (data: IMeeting) => Promise<number>;
+    getAllUsers: (user: IUser | undefined) => void;
+    addGuest: (user: IUser, meetingId?: number) => void;
+    removeGuest: (user: IUser, meetingId?: number) => void;
+    getMeeting: (userId: number | undefined, meetingId: number) => void;
+    getAllMeetings: () => void;
+    manageInvitation: (meetingId: number | undefined, accepted: number) => void;
 }

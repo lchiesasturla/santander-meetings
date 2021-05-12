@@ -1,14 +1,19 @@
 import styled from '@emotion/styled';
-import { FunctionComponent } from 'react'
 import { Form, InputGroup } from 'react-bootstrap';
+import { FieldError, UseFormRegister } from 'react-hook-form';
 import { Control } from '../../styles/styles';
+import { IValidations } from '../../interfaces/GenericInterface';
 
-export interface InputProps {
-    name: string,
-    label?: string,
-    type: string,
-    state: any,
-    setState: any
+export interface InputProps<T> {
+    name: string | any;
+    label?: string;
+    type: string;
+    state: UseFormRegister<T>;
+    error?: FieldError;
+    errormsg?: string;
+    validations: Partial<IValidations>;
+    min?: string;
+    focusFunction?: () => void;
 }
 
 const Label = styled(Form.Label)`
@@ -17,19 +22,14 @@ const Label = styled(Form.Label)`
   font-size: 0.9rem;
 `;
 
-const Input: FunctionComponent<InputProps> = ({name, label, type, state, setState}) => {
-
-    const handleChange = (e: any) => {
-        setState({...state, [e.target.name]: e.target.value});
-    }
-
+const Input = <T extends{}>({name, label, type, state, error, errormsg, validations, min, focusFunction}: InputProps<T>) => {
     return (
         <Form.Group controlId={label ? name : undefined}>
             {label ? <Label>{label}</Label> : null}
             <InputGroup>
-                <Control type={type} name={name} onChange={handleChange}/>
+                <Control type={type} min={min} onFocus={focusFunction} {...state(name, validations)}/>
             </InputGroup>
-            {/* <p className="help-block text-danger">Campo requerido</p> */}
+            {error ? <p className="help-block text-danger mt-3">{errormsg}</p> : null}
         </Form.Group>
 
     );
