@@ -50,7 +50,7 @@ const NewAccount: FunctionComponent<NewAccountProps> = ({setIsLogin}) => {
             <Row className="justify-content-center">
                 <Logo big={true} src={LogoImg} className="mb-3"/>
                 <Form onSubmit={handleSubmit(registerSubmit)}>
-                    {error?.msg_es !== ''?
+                    {error && error?.msg_es !== ''?
                             <FlexContainer
                                 align='center'
                                 justify='center'

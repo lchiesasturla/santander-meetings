@@ -25,6 +25,15 @@ Base de datos:
  2. Contar con la base de datos "santander_meetings" creada.
  3. Me encontre con que el driver de mysql tiene un bug con respecto a la autenticacion nueva que se implemento en MySQL 8.0, por lo que les dejo el comando que encontre por internet para poder arreglarlo y poder continuar
  
+ 	En donde dice root iria nuestro usuario y en donde dice password iria la password que tenemos habitualmente.
+	*ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'password'*
+	Luego de haber corrido este comando, refreshear los privilegios con el comando:
+	*flush privileges;*
+	
+	Dejo igualmente el stackoverflow que me ayudo a solucionarlo por si mi explicacion no es la mejor jajajaja
+	
+	https://stackoverflow.com/a/50131831
+ 
  Backend:
 
  1. Primero que nada, debemos instalar primero las dependencias con *npm i*
@@ -40,16 +49,6 @@ Frontend:
 
 La aplicacion no cuenta con tests ya que no conte con el tiempo por un tema laboral y de facultad y decidi priorizar otros aspectos de la aplicacion.
 
-
-    
-	En donde dice root iria nuestro usuario y en donde dice password iria la password que tenemos habitualmente.
-	*ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'password'*
-	Luego de haber corrido este comando, refreshear los privilegios con el comando:
-	*flush privileges;*
-	
-	Dejo igualmente el stackoverflow que me ayudo a solucionarlo por si mi explicacion no es la mejor jajajaja
-	
-	https://stackoverflow.com/a/50131831
 
 Espero que les guste mi aplicacion, considero que se le puede hacer muchas mejoras pero creo que quedo bastante bien jeje.
 
